@@ -1,69 +1,514 @@
-<div class="Box-body tmp-p-4">
-    <div class="d-flex flex-justify-between">
-      <div class="text-mono text-small tmp-mb-3">
-        <a href="/MajidMirshekari/MajidMirshekari" class="no-underline Link--primary">MajidMirshekari</a><span class="color-fg-muted d-inline-block" style="padding:0px 2px;">/</span>README<span class="color-fg-muted">.md</span>
-      </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radin Dev | Code IDE Profile</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0c10;
+            font-family: 'Segoe UI', 'Fira Code', 'JetBrains Mono', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .ide-container {
+            max-width: 1300px;
+            width: 100%;
+            background: #1e1e2e;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(75, 85, 99, 0.3);
+        }
+
+        .title-bar {
+            background: #181825;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #313244;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 12px;
+        }
+
+        .win-btn {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            transition: 0.2s;
+        }
+
+        .close { background: #ff5f56; }
+        .min { background: #ffbd2e; }
+        .max { background: #27c93f; }
+
+        .ide-title {
+            color: #cdd6f4;
+            font-size: 13px;
+            font-family: monospace;
+            background: #313244;
+            padding: 4px 12px;
+            border-radius: 8px;
+        }
+
+        .tabs {
+            background: #181825;
+            display: flex;
+            gap: 4px;
+            padding-left: 20px;
+            border-bottom: 1px solid #313244;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            color: #a6adc8;
+            font-size: 13px;
+            cursor: pointer;
+            background: #1e1e2e;
+            border-radius: 8px 8px 0 0;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: monospace;
+        }
+
+        .tab.active {
+            background: #1e1e2e;
+            color: #89b4fa;
+            border-bottom: 2px solid #89b4fa;
+        }
+
+        .tab:hover:not(.active) {
+            background: #313244;
+            color: #cdd6f4;
+        }
+
+        .editor-area {
+            display: flex;
+            min-height: 550px;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #181825;
+            border-right: 1px solid #313244;
+            padding: 16px;
+        }
+
+        .sidebar-title {
+            color: #89b4fa;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+
+        .file-tree {
+            list-style: none;
+        }
+
+        .file-tree li {
+            padding: 6px 0;
+            color: #a6adc8;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+
+        .file-tree li:hover {
+            color: #89b4fa;
+        }
+
+        .file-tree .active-file {
+            color: #89b4fa;
+            background: #313244;
+            padding-left: 8px;
+            border-radius: 6px;
+        }
+
+        .content-panel {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            max-height: 550px;
+        }
+
+        .code-window {
+            background: #0a0c10;
+            border-radius: 12px;
+            border: 1px solid #313244;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .code-header {
+            background: #181825;
+            padding: 8px 16px;
+            border-bottom: 1px solid #313244;
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #a6adc8;
+        }
+
+        .code-lang {
+            color: #89b4fa;
+        }
+
+        .code-body {
+            padding: 16px;
+            font-family: 'Fira Code', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #cdd6f4;
+            overflow-x: auto;
+        }
+
+        .code-body pre {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+
+        .skills-icon-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            gap: 18px;
+            margin-top: 20px;
+            background: transparent;
+            padding: 8px 0;
+        }
+
+        .skill-icon-item {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            background: transparent;
+            padding: 8px 12px;
+            transition: all 0.2s ease;
+            border-radius: 16px;
+        }
+
+        .skill-icon-item:hover {
+            transform: translateY(-4px);
+        }
+
+        .skill-icon-item img {
+            width: 48px;
+            height: 48px;
+            display: block;
+        }
+
+        .skill-icon-item span {
+            font-size: 13px;
+            font-weight: 500;
+            color: #cdd6f4;
+            font-family: 'Segoe UI', monospace;
+            background: transparent;
+        }
+
+        .contact-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .contact-link {
+            background: #181825;
+            border: 1px solid #313244;
+            padding: 10px 18px;
+            border-radius: 40px;
+            color: #cdd6f4;
+            text-decoration: none;
+            font-size: 13px;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+        }
+
+        .contact-link:hover {
+            border-color: #89b4fa;
+            color: #89b4fa;
+            transform: translateY(-2px);
+        }
+
+        .contact-link img {
+            width: 18px;
+            height: 18px;
+        }
+
+        hr {
+            border-color: #313244;
+            margin: 16px 0;
+        }
+
+        .status-line {
+            color: #a6e3a1;
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #181825;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #313244;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+<div class="ide-container">
+    <div class="title-bar">
+        <div class="window-controls">
+            <div class="win-btn close"></div>
+            <div class="win-btn min"></div>
+            <div class="win-btn max"></div>
+        </div>
+        <div class="ide-title">
+            <i>📁</i> RadinDev@ide:~/
+        </div>
+        <div style="width: 70px;"></div>
     </div>
-    <article class="markdown-body entry-content container-lg f5" itemprop="text">
 
-<div id="user-content-toc" dir="auto">
-  <ul align="center" dir="auto">
-    <summary><div class="markdown-heading" dir="auto"><h2 class="heading-element" dir="auto">Technologies That I Know 👨🏻‍💻</h2><a id="user-content-technologies-that-i-know‍" class="anchor" aria-label="Permalink: Technologies That I Know 👨🏻‍💻" href="#technologies-that-i-know‍"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div></summary>
-  </ul>
+    <div class="tabs">
+        <div class="tab active" data-tab="welcome">📄 welcome.md</div>
+        <div class="tab" data-tab="about">👤 about.radin</div>
+        <div class="tab" data-tab="skills">⚙️ skills.json</div>
+        <div class="tab" data-tab="contact">📡 contact.sh</div>
+    </div>
+
+    <div class="editor-area">
+        <div class="sidebar">
+            <div class="sidebar-title">📂 EXPLORER</div>
+            <ul class="file-tree">
+                <li data-tab="welcome" class="file-item active-file">📄 welcome.md</li>
+                <li data-tab="about" class="file-item">📄 about.radin</li>
+                <li data-tab="skills" class="file-item">📄 skills.json</li>
+                <li data-tab="contact" class="file-item">📄 contact.sh</li>
+                <hr style="margin: 12px 0;">
+                <li>📁 portfolio/</li>
+                <li style="padding-left: 20px;">🌐 bestui.ir</li>
+                <li style="padding-left: 20px;">📄 MyResume.jpg</li>
+            </ul>
+        </div>
+
+        <div class="content-panel" id="contentPanel">
+            <div id="welcome-content" class="tab-content" style="display: block;">
+                <div class="code-window">
+                    <div class="code-header">
+                        <span class="code-lang">📄 TERMINAL</span>
+                        <span class="status-line">🟢 ONLINE</span>
+                    </div>
+                    <div class="code-body">
+                        <pre>> root@radin:~# whoami</pre>
+                        <pre style="color: #89b4fa;">Radin (Majid Mirshekari)</pre>
+                        <pre>></pre>
+                        <pre>> root@radin:~# cat welcome.txt</pre>
+                        <pre>┌─────────────────────────────────────────┐</pre>
+                        <pre>│  🚀 Welcome to my Dev Space!            │</pre>
+                        <pre>│  👨‍💻 FullStack Developer & Security Geek │</pre>
+                        <pre>│  🔐 "Code. Break. Fix. Repeat."         │</pre>
+                        <pre>└─────────────────────────────────────────┘</pre>
+                        <pre>></pre>
+                        <pre>> <span style="color: #a6e3a1;">System ready. Let's build something amazing.</span></pre>
+                    </div>
+                </div>
+
+                <div class="code-window">
+                    <div class="code-header">
+                        <span class="code-lang">📊 STATS</span>
+                    </div>
+                    <div class="code-body">
+                        <pre>📅 Started : 2021 (Solar 1400)</pre>
+                        <pre>⏱️  Experience : ~4-5 Years</pre>
+                        <pre>💼 Current : DooLoop + Freelance</pre>
+                        <pre>🌍 Location : Remote / On-site</pre>
+                        <pre>🎯 Goal : Master FullStack & Cybersecurity</pre>
+                    </div>
+                </div>
+            </div>
+
+            <div id="about-content" class="tab-content" style="display: none;">
+                <div class="code-window">
+                    <div class="code-header">
+                        <span class="code-lang">📄 about.radin</span>
+                    </div>
+                    <div class="code-body">
+                        <pre>{</pre>
+                        <pre>  <span style="color: #89b4fa;">"name"</span>: <span style="color: #a6e3a1;">"Radin (Majid Mirshekari)"</span>,</pre>
+                        <pre>  <span style="color: #89b4fa;">"alias"</span>: <span style="color: #a6e3a1;">"Radin"</span>,</pre>
+                        <pre>  <span style="color: #89b4fa;">"role"</span>: <span style="color: #a6e3a1;">"FullStack Developer & Security Enthusiast"</span>,</pre>
+                        <pre>  <span style="color: #89b4fa;">"experience"</span>: <span style="color: #a6e3a1;">"~4-5 years (2021 - present)"</span>,</pre>
+                        <pre>  <span style="color: #89b4fa;">"work"</span>: {</pre>
+                        <pre>    <span style="color: #89b4fa;">"company"</span>: <span style="color: #a6e3a1;">"DooLoop"</span>,</pre>
+                        <pre>    <span style="color: #89b4fa;">"type"</span>: <span style="color: #a6e3a1;">"On-site + Remote Freelance"</span></pre>
+                        <pre>  },</pre>
+                        <pre>  <span style="color: #89b4fa;">"mission"</span>: <span style="color: #a6e3a1;">"Always learning, always improving"</span></pre>
+                        <pre>}</pre>
+                    </div>
+                </div>
+
+                <div class="code-window">
+                    <div class="code-header">
+                        <span class="code-lang">💡 QUOTE</span>
+                    </div>
+                    <div class="code-body">
+                        <pre>"The quieter you become, the more you are able to hear."</pre>
+                        <pre>— Kali Linux proverb</pre>
+                    </div>
+                </div>
+            </div>
+
+            <div id="skills-content" class="tab-content" style="display: none;">
+                <div class="code-window">
+                    <div class="code-header">
+                        <span class="code-lang">⚙️ skills.json</span>
+                    </div>
+                    <div class="code-body">
+                        <pre>{</pre>
+                        <pre>  <span style="color: #89b4fa;">"frontend"</span>: [<span style="color: #a6e3a1;">"HTML"</span>, <span style="color: #a6e3a1;">"CSS"</span>, <span style="color: #a6e3a1;">"Sass"</span>, <span style="color: #a6e3a1;">"Tailwind"</span>, <span style="color: #a6e3a1;">"JavaScript"</span>],</pre>
+                        <pre>  <span style="color: #89b4fa;">"backend"</span>: [<span style="color: #a6e3a1;">"Python"</span>, <span style="color: #a6e3a1;">"PHP"</span>],</pre>
+                        <pre>  <span style="color: #89b4fa;">"design"</span>: [<span style="color: #a6e3a1;">"Figma"</span>, <span style="color: #a6e3a1;">"UI/UX"</span>, <span style="color: #a6e3a1;">"WordPress"</span>],</pre>
+                        <pre>  <span style="color: #89b4fa;">"tools"</span>: [<span style="color: #a6e3a1;">"Git"</span>, <span style="color: #a6e3a1;">"GitHub"</span>],</pre>
+                        <pre>  <span style="color: #89b4fa;">"os"</span>: [<span style="color: #a6e3a1;">"Windows"</span>, <span style="color: #a6e3a1;">"Linux"</span>],</pre>
+                        <pre>  <span style="color: #89b4fa;">"security"</span>: [<span style="color: #a6e3a1;">"Network Analysis"</span>, <span style="color: #a6e3a1;">"Ethical Hacking"</span>]</pre>
+                        <pre>}</pre>
+                    </div>
+                </div>
+
+                <div class="skills-icon-group">
+                    <div class="skill-icon-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" alt="HTML5"><span>HTML5</span></div>
+                    <div class="skill-icon-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" alt="CSS3"><span>CSS3</span></div>
+                    <div class="skill-icon-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sass/sass-original.svg" alt="Sass"><span>Sass</span></div>
+                    <div class="skill-icon-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg" alt="Tailwind"><span>Tailwind</span></div>
+                    <div class="skill-icon-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="JavaScript"><span>JavaScript</span></div>
+                    <div class="skill-icon-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python"><span>Python</span></div>
+                    <div class="skill-icon-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg" alt="PHP"><span>PHP</span></div>
+                    <div class="skill-icon-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg" alt="Figma"><span>Figma</span></div>
+                    <div class="skill-icon-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/wordpress/wordpress-original.svg" alt="WordPress"><span>WordPress</span></div>
+                    <div class="skill-icon-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" alt="Git"><span>Git</span></div>
+                    <div class="skill-icon-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub"><span>GitHub</span></div>
+                    <div class="skill-icon-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/windows8/windows8-original.svg" alt="Windows"><span>Windows</span></div>
+                    <div class="skill-icon-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" alt="Linux"><span>Linux</span></div>
+                </div>
+            </div>
+
+            <div id="contact-content" class="tab-content" style="display: none;">
+                <div class="code-window">
+                    <div class="code-header">
+                        <span class="code-lang">📡 contact.sh</span>
+                    </div>
+                    <div class="code-body">
+                        <pre>#!/bin/bash</pre>
+                        <pre># Establish secure connection with Radin</pre>
+                        <pre></pre>
+                        <pre>TELEGRAM="<span style="color: #89b4fa;">@MajidMirshekari76</span>"</pre>
+                        <pre>EMAIL="<span style="color: #89b4fa;">MajidMirshekari6@gmail.com</span>"</pre>
+                        <pre>EMAIL2="<span style="color: #89b4fa;">Majid-Mirshekari@Hotmail.com</span>"</pre>
+                        <pre>LINKEDIN="<span style="color: #89b4fa;">majid-mirshekari-322005130</span>"</pre>
+                        <pre>PORTFOLIO="<span style="color: #89b4fa;">https://www.BestUI.ir</span>"</pre>
+                        <pre></pre>
+                        <pre>echo "📱 Telegram: $TELEGRAM"</pre>
+                        <pre>echo "📧 Email: $EMAIL"</pre>
+                        <pre>echo "🌐 Portfolio: $PORTFOLIO"</pre>
+                    </div>
+                </div>
+
+                <div class="contact-links">
+                    <a href="https://t.me/MajidMirshekari76" class="contact-link">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/telegram/telegram-original.svg" width="18" height="18" style="filter: invert(0);"> Telegram
+                    </a>
+                    <a href="mailto:MajidMirshekari6@gmail.com" class="contact-link">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" width="18" height="18"> Gmail
+                    </a>
+                    <a href="mailto:Majid-Mirshekari@Hotmail.com" class="contact-link">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/d/df/Microsoft_Office_Outlook_%282018%E2%80%93present%29.svg" width="18" height="18"> Outlook
+                    </a>
+                    <a href="https://www.linkedin.com/in/majid-mirshekari-322005130/" class="contact-link">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" width="18" height="18"> LinkedIn
+                    </a>
+                    <a href="https://www.BestUI.ir" class="contact-link">
+                        🌐 BestUI.ir
+                    </a>
+                </div>
+
+                <hr>
+
+                <div class="code-window">
+                    <div class="code-header">
+                        <span class="code-lang">📄 RESUME</span>
+                    </div>
+                    <div class="code-body">
+                        <pre>📁 File: MyResume.jpg</pre>
+                        <pre>🔗 <a href="/MajidMirshekari/MajidMirshekari/blob/main/MyResume.jpg" style="color: #89b4fa;">Click here to download resume</a></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<p align="center">
-  <img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" alt="animated divider" width="100%">
-</p>
+<script>
+    const tabs = document.querySelectorAll('.tab');
+    const fileItems = document.querySelectorAll('.file-item');
+    const contents = {
+        welcome: document.getElementById('welcome-content'),
+        about: document.getElementById('about-content'),
+        skills: document.getElementById('skills-content'),
+        contact: document.getElementById('contact-content')
+    };
 
-<p align="center" dir="auto">
-  <a href="https://skillicons.dev" rel="nofollow">
-    <img src="https://skillicons.dev/icons?i=html,css,sass,tailwind,js,py,php,figma,wordpress,git,github,linux,windows&perline=13" alt="My Skills">
-  </a>
-</p>
+    function switchTab(tabId) {
+        Object.values(contents).forEach(content => {
+            if (content) content.style.display = 'none';
+        });
+        if (contents[tabId]) contents[tabId].style.display = 'block';
+        
+        tabs.forEach(tab => {
+            if (tab.dataset.tab === tabId) tab.classList.add('active');
+            else tab.classList.remove('active');
+        });
+        
+        fileItems.forEach(item => {
+            if (item.dataset.tab === tabId) item.classList.add('active-file');
+            else item.classList.remove('active-file');
+        });
+    }
 
-<div class="markdown-heading" dir="auto"><h1 class="heading-element" dir="auto">Brief Introduction of ME!</h1><a id="user-content-brief-introduction-of-me" class="anchor" aria-label="Permalink: Brief Introduction of ME!" href="#brief-introduction-of-me"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
-
-<p dir="auto">
-  🚀 <strong>Front-End & Back-End Enthusiast</strong> | JavaScript & Python Developer | Network & Security Explorer 🔒<br>
-  Started in 2021 (Solar Hijri 1400) • ~4-5 Years of Coding Experience • Self-taught & Always Learning 📚<br>
-  💼 <strong>Currently:</strong> Working at <strong>DooLoop</strong> (On-site) + Remote Freelance Projects<br>
-  🌱 <strong>Always trying to improve myself and become a better Full-Stack Developer</strong>
-</p>
-
-<div class="markdown-heading" dir="auto"><h1 class="heading-element" dir="auto">MY RESUME</h1><a id="user-content-my-resume" class="anchor" aria-label="Permalink: MY RESUME" href="#my-resume"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
-
-<p dir="auto">
-  📄 <a href="/MajidMirshekari/MajidMirshekari/blob/main/MyResume.jpg">Download Resume (Image)</a> | Full Portfolio
-</p>
-
-<div class="markdown-heading" dir="auto"><h1 class="heading-element" dir="auto">Contact me</h1><a id="user-content-contact-me" class="anchor" aria-label="Permalink: Contact me" href="#contact-me"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
-
-<p dir="auto">
-  <strong>📱 Telegram (Main):</strong> <a href="https://t.me/MajidMirshekari76" rel="nofollow">@MajidMirshekari76</a><br>
-  <strong>📧 Email:</strong> <a href="mailto:MajidMirshekari6@gmail.com">MajidMirshekari6@gmail.com</a> / <a href="mailto:Majid-Mirshekari@Hotmail.com">Majid-Mirshekari@Hotmail.com</a><br>
-  <strong>🔗 LinkedIn:</strong> <a href="https://www.linkedin.com/in/majid-mirshekari-322005130/" rel="nofollow">Majid Mirshekari</a><br>
-  <strong>🌐 Personal Website:</strong> <a href="https://www.BestUI.ir" rel="nofollow">BestUI.ir</a>
-</p>
-
-<div id="user-content-toc" dir="auto">
-  <ul align="center" dir="auto">
-    <summary><div class="markdown-heading" dir="auto"><h2 class="heading-element" dir="auto">My Stats 📊</h2><a id="user-content-my-stats-" class="anchor" aria-label="Permalink: My Stats 📊" href="#my-stats-"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div></summary>
-  </ul>
-</div>
-
-<p align="center">
-  <img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" alt="animated divider" width="100%">
-</p>
-
-<p align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=MajidMirshekari&theme=tokyonight&show_icons=true&count_private=true" alt="GitHub Stats" width="49%">
-  <img src="https://github-readme-streak-stats.herokuapp.com/?user=MajidMirshekari&theme=tokyonight&hide_border=false" alt="GitHub Streak" width="49%">
-</p>
-
-<p align="center">
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=MajidMirshekari&theme=tokyonight&hide_border=false&no-bg=true&no-frame=true&langs_count=20" alt="Top Languages" width="70%">
-</p>
-
-</article>
-</div>
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+    });
+    fileItems.forEach(item => {
+        item.addEventListener('click', () => switchTab(item.dataset.tab));
+    });
+</script>
+</body>
+</html>
