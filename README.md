@@ -1,10 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Radin Dev | Code IDE Profile</title>
-    <style>
+<style>
         * {
             margin: 0;
             padding: 0;
@@ -283,8 +277,6 @@
             border-radius: 4px;
         }
     </style>
-</head>
-<body>
 <div class="ide-container">
     <div class="title-bar">
         <div class="window-controls">
@@ -510,5 +502,3 @@
         item.addEventListener('click', () => switchTab(item.dataset.tab));
     });
 </script>
-</body>
-</html>
